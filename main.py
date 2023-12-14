@@ -1,5 +1,4 @@
 import csv
-from typing import Any, Dict, Set, List, Union
 
 import rich.progress
 
@@ -11,14 +10,30 @@ def write_manager_metadata() -> None:
     with open("managers.csv", "w") as f:
         writer = csv.DictWriter(f, fieldnames=FIELDS)
         writer.writeheader()
-        for season in rich.progress.track(range(2000, 2024), description="Scraping Meta Manager Info"):
+        for season in rich.progress.track(
+            range(2000, 2024), description="Scraping Meta Manager Info"
+        ):
             managers = get_managers(season)
             for manager in managers:
-                writer.writerow({"season": season, "manager": manager.name, "identifier": manager.manager_number, "club": manager.club})
+                writer.writerow(
+                    {
+                        "season": season,
+                        "manager": manager.name,
+                        "identifier": manager.manager_number,
+                        "club": manager.club,
+                    }
+                )
 
 
 def write_manager_stats() -> None:
-    managers = set().union(*[get_managers(season) for season in rich.progress.track(range(2000, 2022), description="Scraping Meta Manager Info")])
+    managers = set().union(
+        *[
+            get_managers(season)
+            for season in rich.progress.track(
+                range(2000, 2022), description="Scraping Meta Manager Info"
+            )
+        ]
+    )
     with open("manager_stats.csv", "w") as f:
         writer = csv.DictWriter(f, fieldnames=MANAGER_STATS_FIELDS)
         writer.writeheader()
@@ -31,5 +46,3 @@ def write_manager_stats() -> None:
 if __name__ == "__main__":
     # write_manager_metadata()
     write_manager_stats()
-
-
